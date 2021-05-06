@@ -1,6 +1,7 @@
 package br.com.example.ecommerce;
 
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.producer.Callback;
@@ -21,13 +22,17 @@ public class NewOrderMain {
 			}
 			System.out.println("sucesso enviando:::Offset: "+data.offset()+" partition: "+data.partition()+ " offset: "+data.offset());
 		};
-		String data = "1,1,50";
-		ProducerRecord<String, String> recordNewOrder = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", data, data);
-		producer.send(recordNewOrder , callback).get();
-		
-		String email = "Bem-vindo! Estamos processando a sua compra.";
-		ProducerRecord<String, String> recordEmail = new ProducerRecord<String, String>("ECOMMERCE_SEND_EMAIL", email, email);
-		producer.send(recordEmail, callback).get();
+		for (int i = 0; i < 10; i++) {
+			String key = UUID.randomUUID().toString();
+			String data = key+",1,1,50";
+			ProducerRecord<String, String> recordNewOrder = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", key, data);
+			producer.send(recordNewOrder , callback).get();
+			
+			String email = "Bem-vindo! Estamos processando a sua compra.";
+			ProducerRecord<String, String> recordEmail = new ProducerRecord<String, String>("ECOMMERCE_SEND_EMAIL", key, email);
+			producer.send(recordEmail, callback).get();
+			
+		}
 	}
 
 	private static Properties properties() {
