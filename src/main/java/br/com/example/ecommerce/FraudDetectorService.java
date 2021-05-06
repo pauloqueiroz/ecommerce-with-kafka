@@ -4,10 +4,16 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 public class FraudDetectorService implements Consumer{
 	
+	private static KafkaService kafkaService;
+
 	public static void main(String[] args) {
 		FraudDetectorService service = new FraudDetectorService();
-		KafkaService kafkaService = new KafkaService(FraudDetectorService.class.getSimpleName(), "ECOMMERCE_NEW_ORDER", service);
-		kafkaService.run();
+		try {
+			kafkaService = new KafkaService(FraudDetectorService.class.getSimpleName(), "ECOMMERCE_NEW_ORDER", service);
+			kafkaService.run();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

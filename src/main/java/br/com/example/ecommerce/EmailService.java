@@ -4,10 +4,16 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 public class EmailService implements Consumer{
 
+	private static KafkaService kafkaService;
+
 	public static void main(String[] args) {
 		EmailService emailService = new EmailService();
-		KafkaService kafkaService = new KafkaService(EmailService.class.getSimpleName(), "ECOMMERCE_SEND_EMAIL", emailService);
-		kafkaService.run();
+		try {
+			kafkaService = new KafkaService(EmailService.class.getSimpleName(), "ECOMMERCE_SEND_EMAIL", emailService);
+			kafkaService.run();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void consume(ConsumerRecord<String, String> record) {
