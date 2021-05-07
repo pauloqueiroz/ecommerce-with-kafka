@@ -10,17 +10,17 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-public class KafkaDispatcher implements Closeable{
+public class KafkaDispatcher<T> implements Closeable{
 
-	KafkaProducer<String, String> producer;
+	KafkaProducer<String, T> producer;
 
 	public KafkaDispatcher() {
 		super();
-		this.producer = new KafkaProducer<String, String>(properties());
+		this.producer = new KafkaProducer<String, T>(properties());
 	}
 	
 	
-	public void send(String topic, String key, String value) throws InterruptedException, ExecutionException {
+	public void send(String topic, String key, T value) throws InterruptedException, ExecutionException {
 		
 		Callback callback = (data, ex) -> {
 			if(ex != null) {
@@ -29,7 +29,7 @@ public class KafkaDispatcher implements Closeable{
 			}
 			System.out.println("sucesso enviando::: Topico: "+data.topic()+" Offset: "+data.offset()+" partition: "+data.partition()+ " offset: "+data.offset());
 		};
-		ProducerRecord<String, String> recordNewOrder = new ProducerRecord<String, String>(topic, key, value);
+		ProducerRecord<String, T> recordNewOrder = new ProducerRecord<String, T>(topic, key, value);
 		producer.send(recordNewOrder , callback).get();
 	}
 	
@@ -38,7 +38,7 @@ public class KafkaDispatcher implements Closeable{
 		Properties properties = new Properties();
 		properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "http://localhost:9092");
 		properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-		properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+		properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GsonSerializer.class.getName());
 		return properties;
 	}
 
