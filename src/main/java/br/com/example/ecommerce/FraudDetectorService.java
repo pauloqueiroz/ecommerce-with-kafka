@@ -1,15 +1,17 @@
 package br.com.example.ecommerce;
 
+import java.util.HashMap;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
-public class FraudDetectorService implements Consumer{
+public class FraudDetectorService implements Consumer<Order>{
 	
-	private static KafkaService kafkaService;
+	private static KafkaService<Order> kafkaService;
 
 	public static void main(String[] args) {
 		FraudDetectorService service = new FraudDetectorService();
 		try {
-			kafkaService = new KafkaService(FraudDetectorService.class.getSimpleName(), "ECOMMERCE_NEW_ORDER", service);
+			kafkaService = new KafkaService<Order>(FraudDetectorService.class.getSimpleName(), "ECOMMERCE_NEW_ORDER", service, Order.class, new HashMap<String, String>());
 			kafkaService.run();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -17,7 +19,7 @@ public class FraudDetectorService implements Consumer{
 	}
 
 	@Override
-	public void consume(ConsumerRecord<String, String> record) {
+	public void consume(ConsumerRecord<String, Order> record) {
 		System.out.println("-------------------------");
 		System.out.println("Verificando fraude em compra");
 		System.out.println(record.key());

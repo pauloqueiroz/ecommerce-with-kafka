@@ -7,13 +7,13 @@ import java.util.concurrent.ExecutionException;
 public class NewOrderMain {
 
 	private static KafkaDispatcher<Order> orderDispatcher;
-	private static KafkaDispatcher<String> emailDispatcher;
+	private static KafkaDispatcher<Email> emailDispatcher;
 
 	public static void main(String[] args) throws ExecutionException, InterruptedException{
 		
 		try {		
 			orderDispatcher = new KafkaDispatcher<Order>();
-			emailDispatcher = new KafkaDispatcher<String>();
+			emailDispatcher = new KafkaDispatcher<Email>();
 			for (int i = 0; i < 10; i++) {
 				String userId = UUID.randomUUID().toString();
 				String orderId = UUID.randomUUID().toString();
@@ -21,7 +21,8 @@ public class NewOrderMain {
 				Order order = new Order(userId, orderId, amount);
 				orderDispatcher.send("ECOMMERCE_NEW_ORDER", userId, order);
 				
-				String email = "Bem-vindo! Estamos processando a sua compra.";
+				String emailBody = "Bem-vindo! Estamos processando a sua compra.";
+				Email email = new Email(userId, emailBody);
 				emailDispatcher.send("ECOMMERCE_SEND_EMAIL", userId, email);
 				
 			}
