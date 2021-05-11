@@ -57,5 +57,6 @@
 		<module>service-log</module>
 		<module>service-new-order</module>
 		<module>commom-kakfa</module>
+		<module>service-users</module>
 	</modules>
 </project>
