@@ -20,6 +20,7 @@ public class NewOrderMain {
 				String userId = UUID.randomUUID().toString();
 				String orderId = UUID.randomUUID().toString();
 				BigDecimal amount = new BigDecimal(Math.random()*5000+1);
+				System.out.println("Valor compra: "+amount);
 				Order order = new Order(userId, orderId, amount);
 				orderDispatcher.send("ECOMMERCE_NEW_ORDER", userId, order);
 				

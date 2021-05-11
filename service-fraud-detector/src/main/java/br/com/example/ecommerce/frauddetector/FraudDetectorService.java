@@ -1,15 +1,20 @@
 package br.com.example.ecommerce.frauddetector;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import br.com.example.ecommerce.kafka.Consumer;
+import br.com.example.ecommerce.kafka.KafkaDispatcher;
 import br.com.example.ecommerce.kafka.KafkaService;
 
 public class FraudDetectorService implements Consumer<Order>{
 	
 	private static KafkaService<Order> kafkaService;
+	
+	private static KafkaDispatcher<Order> orderDispatcher = new KafkaDispatcher<Order>();
 
 	public static void main(String[] args) {
 		FraudDetectorService service = new FraudDetectorService();
@@ -35,7 +40,34 @@ public class FraudDetectorService implements Consumer<Order>{
 			//ignoring
 			e.printStackTrace();
 		}
-		System.out.println("Compra processada.");
+		Order order = record.value();
+		if(isFraud(order)) {
+			System.out.println("Compra é fraude. "+order);
+			try {
+				orderDispatcher.send("ECOMMERCE_ORDER_REJECTED", order.getUserId(), order);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		System.out.println("Compra aprovada.");
+		try {
+			orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getUserId(), order);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+	}
+
+	private boolean isFraud(Order order) {
+		return order.getAmount().compareTo(BigDecimal.valueOf(4500)) >= 0;
 	}
 }
