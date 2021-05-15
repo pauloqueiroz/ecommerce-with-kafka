@@ -3,6 +3,7 @@ package br.com.example.user.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -45,13 +46,14 @@ public class CreateUserService implements Consumer<Order>{
 		}
 		Order order = record.value();
 		if(isNewUser(order.getEmail())) {
-			User user = new User(order.getUserId(), order.getEmail());
+			String userId = UUID.randomUUID().toString();
+			User user = new User(userId, order.getEmail());
 			insert(user);
 		}
 		
-		System.out.println("Compra aprovada.");
+		System.out.println("Usuário inserido. Quantidade total: "+users.size());
 		try {
-			orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getUserId(), order);
+			orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getOrderId(), order);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

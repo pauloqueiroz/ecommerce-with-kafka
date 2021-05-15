@@ -17,16 +17,16 @@ public class NewOrderMain {
 			orderDispatcher = new KafkaDispatcher<Order>();
 			emailDispatcher = new KafkaDispatcher<Email>();
 			for (int i = 0; i < 10; i++) {
-				String userId = UUID.randomUUID().toString();
 				String orderId = UUID.randomUUID().toString();
 				BigDecimal amount = new BigDecimal(Math.random()*5000+1);
+				String emailString = Math.random()+"@email.com";
 				System.out.println("Valor compra: "+amount);
-				Order order = new Order(userId, orderId, amount);
-				orderDispatcher.send("ECOMMERCE_NEW_ORDER", userId, order);
+				Order order = new Order(orderId, amount, emailString);
+				orderDispatcher.send("ECOMMERCE_NEW_ORDER", emailString, order);
 				
 				String emailBody = "Bem-vindo! Estamos processando a sua compra.";
-				Email email = new Email(userId, emailBody);
-				emailDispatcher.send("ECOMMERCE_SEND_EMAIL", userId, email);
+				Email email = new Email(emailString, emailBody);
+				emailDispatcher.send("ECOMMERCE_SEND_EMAIL", emailString, email);
 				
 			}
 		}catch (Exception e) {

@@ -3,26 +3,17 @@ package br.com.example.user.service;
 import java.math.BigDecimal;
 
 public class Order {
-
-	private String userId;
 	
 	private String orderId;
 	
 	private BigDecimal amount;
 	
-	public Order(String userId, String orderId, BigDecimal amount) {
+	private String email;
+	
+	public Order(String orderId, BigDecimal amount) {
 		super();
-		this.userId = userId;
 		this.orderId = orderId;
 		this.amount = amount;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 
 	public String getOrderId() {
@@ -42,8 +33,11 @@ public class Order {
 	}
 
 	public String getEmail() {
-		return "";
+		return email;
 	}
-	
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	
 }

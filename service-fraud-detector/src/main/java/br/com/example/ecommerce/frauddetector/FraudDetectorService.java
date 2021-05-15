@@ -44,7 +44,7 @@ public class FraudDetectorService implements Consumer<Order>{
 		if(isFraud(order)) {
 			System.out.println("Compra é fraude. "+order);
 			try {
-				orderDispatcher.send("ECOMMERCE_ORDER_REJECTED", order.getUserId(), order);
+				orderDispatcher.send("ECOMMERCE_ORDER_REJECTED", order.getEmail(), order);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -56,7 +56,7 @@ public class FraudDetectorService implements Consumer<Order>{
 		}
 		System.out.println("Compra aprovada.");
 		try {
-			orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getUserId(), order);
+			orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getEmail(), order);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

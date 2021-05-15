@@ -3,26 +3,19 @@ package br.com.example.ecommerce.neworder;
 import java.math.BigDecimal;
 
 public class Order {
-
-	private String userId;
 	
 	private String orderId;
 	
 	private BigDecimal amount;
 	
-	public Order(String userId, String orderId, BigDecimal amount) {
+	private String email;
+	
+	
+	public Order(String orderId, BigDecimal amount, String email) {
 		super();
-		this.userId = userId;
 		this.orderId = orderId;
 		this.amount = amount;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
+		this.email = email;
 	}
 
 	public String getOrderId() {
@@ -40,6 +33,12 @@ public class Order {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-	
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }
