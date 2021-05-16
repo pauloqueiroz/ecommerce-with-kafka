@@ -58,5 +58,6 @@
 		<module>service-new-order</module>
 		<module>commom-kakfa</module>
 		<module>service-users</module>
+		<module>service-http-ecommerce</module>
 	</modules>
 </project>
