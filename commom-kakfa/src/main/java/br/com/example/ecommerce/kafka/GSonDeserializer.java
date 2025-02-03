@@ -26,7 +26,7 @@ public class GSonDeserializer<T> implements Deserializer<T>{
 		try {
 			this.type = Class.forName(typeName);
 		}catch(Exception e) {
-			throw new RuntimeException("Tipo para deserealização não existe no classpath", e);
+			throw new RuntimeException("Tipo para deserealizacao nao existe no classpath", e);
 		}
 	}
 	
